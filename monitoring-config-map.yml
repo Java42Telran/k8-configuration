@@ -1,0 +1,9 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: monitoring-config-map
+data:
+  springProfilesActive: docker
+  dataProviderHost: http://doctor-patient-data-provider
+  pulseValuesHost: 'http://avg-values-back-office:8585'
+  visitsHost: 'http://visits-back-office:8080'
