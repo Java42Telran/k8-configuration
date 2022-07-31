@@ -1,20 +1,20 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: visits-back-office
+  name: avg-values-back-office
 spec:
   selector:
     matchLabels:
-      app: visits-back-office
+      app: avg-values-back-office
   replicas: 1
   template:
     metadata:
       labels:
-        app: visits-back-office
+        app: avg-values-back-office
     spec:
       containers:
-      - name: visits-back-office
-        image: yuragranovsky/pulse-monitoring_visits-back-office
+      - name: avg-values-back-office
+        image: yuragranovsky/pulse-monitoring_avg-values-back-office
         resources:
           requests:
             memory: "200Mi"
@@ -28,23 +28,23 @@ spec:
               configMapKeyRef:
                 key: springProfilesActive
                 name: monitoring-config-map
-          - name: POSTGRES_PASSWORD
+          - name: MONGO_PASSWORD
             valueFrom:
               secretKeyRef:
-                key: postgresPassword
+                key: mongoPassword
                 name: monitoring-secret
         ports:
-        - containerPort: 8080
+        - containerPort: 8585
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: visits-back-office
+  name: avg-values-back-office
 spec:
   selector:
-    app: visits-back-office
+    app: avg-values-back-office
   type: ClusterIP
   ports:
-  - port: 8080
-    targetPort: 8080
+  - port: 8585
+    targetPort: 8585
 

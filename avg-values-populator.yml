@@ -1,20 +1,20 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: visits-back-office
+  name: avg-values-populator
 spec:
   selector:
     matchLabels:
-      app: visits-back-office
+      app: avg-values-populator
   replicas: 1
   template:
     metadata:
       labels:
-        app: visits-back-office
+        app: avg-values-populator
     spec:
       containers:
-      - name: visits-back-office
-        image: yuragranovsky/pulse-monitoring_visits-back-office
+      - name: avg-values-populator
+        image: yuragranovsky/pulse-monitoring_avg-values-populator
         resources:
           requests:
             memory: "200Mi"
@@ -28,23 +28,27 @@ spec:
               configMapKeyRef:
                 key: springProfilesActive
                 name: monitoring-config-map
-          - name: POSTGRES_PASSWORD
+          - name: CLOUDKARAFKA_PASSWORD
             valueFrom:
               secretKeyRef:
-                key: postgresPassword
+                key: kafkaPassword
                 name: monitoring-secret
-        ports:
-        - containerPort: 8080
+          - name: MONGO_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                key: mongoPassword
+                name: monitoring-secret             
+        
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: visits-back-office
+  name: avg-values-populator
 spec:
   selector:
-    app: visits-back-office
+    app: avg-values-populator
   type: ClusterIP
   ports:
-  - port: 8080
-    targetPort: 8080
+  - port: 10000
+    targetPort: 10000
 

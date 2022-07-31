@@ -1,20 +1,20 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: visits-back-office
+  name: doctor-patient-data-provider
 spec:
   selector:
     matchLabels:
-      app: visits-back-office
+      app: doctor-patient-data-provider
   replicas: 1
   template:
     metadata:
       labels:
-        app: visits-back-office
+        app: doctor-patient-data-provider
     spec:
       containers:
-      - name: visits-back-office
-        image: yuragranovsky/pulse-monitoring_visits-back-office
+      - name: doctor-patient-data-provider
+        image: yuragranovsky/pulse-monitoring_doctor-patient-data-provider
         resources:
           requests:
             memory: "200Mi"
@@ -34,17 +34,17 @@ spec:
                 key: postgresPassword
                 name: monitoring-secret
         ports:
-        - containerPort: 8080
+        - containerPort: 8282
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: visits-back-office
+  name: doctor-patient-data-provider
 spec:
   selector:
-    app: visits-back-office
+    app: doctor-patient-data-provider
   type: ClusterIP
   ports:
-  - port: 8080
-    targetPort: 8080
+  - port: 8282
+    targetPort: 8282
 

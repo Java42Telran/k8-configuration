@@ -1,20 +1,20 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: visits-back-office
+  name: analyser
 spec:
   selector:
     matchLabels:
-      app: visits-back-office
+      app: analyser
   replicas: 1
   template:
     metadata:
       labels:
-        app: visits-back-office
+        app: analyser
     spec:
       containers:
-      - name: visits-back-office
-        image: yuragranovsky/pulse-monitoring_visits-back-office
+      - name: analyser
+        image: yuragranovsky/pulse-monitoring_analyser
         resources:
           requests:
             memory: "200Mi"
@@ -28,23 +28,27 @@ spec:
               configMapKeyRef:
                 key: springProfilesActive
                 name: monitoring-config-map
-          - name: POSTGRES_PASSWORD
+          - name: CLOUDKARAFKA_PASSWORD
             valueFrom:
               secretKeyRef:
-                key: postgresPassword
+                key: kafkaPassword
                 name: monitoring-secret
-        ports:
-        - containerPort: 8080
+          - name: REDIS_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                key: redisPassword
+                name: monitoring-secret             
+        
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: visits-back-office
+  name: analyser
 spec:
   selector:
-    app: visits-back-office
+    app: analyser
   type: ClusterIP
   ports:
-  - port: 8080
-    targetPort: 8080
+  - port: 10000
+    targetPort: 10000
 
